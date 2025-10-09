@@ -1,13 +1,16 @@
+
+
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "attendance_system_2";
+$servername = getenv('DB_HOST');
+$port = getenv('DB_PORT');
+$username = getenv('DB_USER');
+$password = getenv('DB_PASS');
+$dbname = getenv('DB_NAME');
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+$conn = mysqli_init();
+mysqli_real_connect($conn, $servername, $username, $password, $dbname, $port);
 
-// Check connection
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
+?>
