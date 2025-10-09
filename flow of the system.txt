@@ -1,0 +1,47 @@
+1. RFID Scan
+
+	The RFID reader scans a card.
+
+	The card’s UID is uploaded to the database with a timestamp.
+
+2. Admin Handling for New Users
+
+	Admin manually enters:
+
+		User Name
+
+		User Type (Student, Staff, etc.)
+
+		Department / Class / Section
+
+		Admin saves the entry → database now links UID → User info.
+
+3. Attendance Logging
+
+	Once a UID is registered:
+
+	Every scan automatically logs attendance.
+
+	Log fields:
+
+		UID
+
+		User ID / Name
+
+		Timestamp
+
+		Session type (Morning / Afternoon / Evening)
+
+		Status (Present / Late / Absent)
+
+	Admin can edit logs if there’s a mistake (wrong scan, duplicate, etc.).
+
+4. Reports & Export
+
+	Admin can generate:
+
+		Daily / Weekly / Monthly attendance reports.
+
+		Filter by user, date, session.
+
+		Export to CSV / PDF for record-keeping.
