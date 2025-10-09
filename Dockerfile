@@ -12,4 +12,3 @@ RUN docker-php-ext-install mysqli
 
 # Expose default HTTP port
 EXPOSE 80
-
