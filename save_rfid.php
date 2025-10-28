@@ -6,9 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get and sanitize POST data
     $uid = isset($_POST['uid']) ? mysqli_real_escape_string($conn, $_POST['uid']) : '';
     $timestamp = isset($_POST['timestamp']) ? mysqli_real_escape_string($conn, $_POST['timestamp']) : '';
+    $device_id = isset($_POST['device_id']) ? mysqli_real_escape_string($conn, $_POST['device_id']) : '';
 
-    if (empty($uid) || empty($timestamp)) {
-        echo "Error: UID or timestamp missing!";
+    if (empty($uid) || empty($timestamp) || empty($device_id)) {
+        echo "Error: UID, timestamp, or device_id missing!";
         exit;
     }
 
@@ -49,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         else $session = 'AM_IN';
     }
 
-    // Insert into database
-    $insertQuery = "INSERT INTO attendance (card_uid, session_type, scan_time) 
-                    VALUES ('$uid', '$session', '$timestamp')";
+    // Insert into database (with device_id)
+    $insertQuery = "INSERT INTO attendance (card_uid, session_type, scan_time, device_id) 
+                    VALUES ('$uid', '$session', '$timestamp', '$device_id')";
     if (mysqli_query($conn, $insertQuery)) {
-        echo "✅ Attendance saved: $uid - $session at $timestamp";
+        echo "✅ Attendance saved: $uid - $session at $timestamp (Device: $device_id)";
     } else {
         echo "❌ Database error: " . mysqli_error($conn);
     }
