@@ -10,7 +10,7 @@ echo "
       </div>
       <div class='modal-body'>
         <form method='POST'>
-            <input type='hidden' name='card_uid' value='$card_uid'>
+            <input type='text' name='card_uid' value='$card_uid'>
 
             <div class='mb-3'>
                 <label for='firstname$card_uid' class='form-label'>First Name</label>
