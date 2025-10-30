@@ -77,9 +77,10 @@ include '../auth/authentication.php';
             $year_section = mysqli_real_escape_string($conn, $_GET['year_section']);
             $month = isset($_GET['month']) ? intval($_GET['month']) : date('n');
             $year = date('Y');
+          
+            // Get number of days in the selected month (works even without calendar extension)
+            $num_days = date('t', strtotime("$year-$month-01"));
 
-            // Get number of days in the selected month
-            $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
             // Get students in the section who have attendance records from this device
             $students_sql = "
