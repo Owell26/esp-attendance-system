@@ -79,7 +79,7 @@ include '../auth/authentication.php';
             $year = date('Y');
 
             // Get number of days in the selected month
-            $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            $num_days = date('t', strtotime("$year-$month-01"));
 
             // Get students in the section who have attendance records from this device
             $students_sql = "
