@@ -18,5 +18,4 @@ mysqli_real_connect($conn, $servername, $username, $password, $dbname, $port, NU
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
-
 ?>
