@@ -47,7 +47,12 @@ include '../auth/authentication.php';
 
            <?php
             // Fetch all users
-            $sql = "SELECT * FROM users";
+            $sql = "
+                SELECT DISTINCT users.*
+                FROM users
+                INNER JOIN attendance ON users.card_uid = attendance.card_uid
+                WHERE TRIM(attendance.device_id) = TRIM('$device_id')
+            ";
             $sql_run = mysqli_query($conn, $sql);
 
             if ($sql_run && mysqli_num_rows($sql_run) > 0) {

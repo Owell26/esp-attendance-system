@@ -10,7 +10,6 @@ if(!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true
     exit();
 }
 
-// You can access admin info like:
-// $adminName = $_SESSION['admin_name'];
-// $adminId = $_SESSION['admin_id'];
+$device_id = $_SESSION['device_id'];
+
 ?>

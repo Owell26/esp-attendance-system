@@ -3,17 +3,6 @@ include '../includes/header.php';
 include '../includes/navbar.php';
 include '../auth/authentication.php';
 
-if (isset($_POST['submit'])) {
-    $uid = $_POST['uid'];
-
-    $sql = "INSERT INTO attendance (card_uid) VALUES ('$uid')";
-    $sql_run = mysqli_query($conn, $sql);
-
-    if ($sql_run) {
-        echo "<div class='alert alert-success mt-3'>UID added successfully!</div>";
-    }
-}
-
 if (isset($_POST['assign'])) {
     $card_uid = $_POST['card_uid'];
     $firstname = $_POST['firstname'];
@@ -44,7 +33,7 @@ if (isset($_POST['assign'])) {
                 <?php
                 // Count unassigned
                 $count_sql = "SELECT COUNT(*) AS total FROM attendance 
-                              WHERE card_uid NOT IN (SELECT card_uid FROM users WHERE card_uid IS NOT NULL)";
+                              WHERE device_id = '$device_id' AND card_uid NOT IN (SELECT card_uid FROM users WHERE card_uid IS NOT NULL)";
                 $count_run = mysqli_query($conn, $count_sql);
                 $count_row = mysqli_fetch_assoc($count_run);
                 $total_unassigned = $count_row['total'] ?? 0;
@@ -53,100 +42,6 @@ if (isset($_POST['assign'])) {
             </div>
         </div>
         <hr>
-
-        <!-- Testing -->
-        <?php
-        // function generateRandomUID($conn) {
-        //     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        //     $uid = '';
-        //     do {
-        //         $uid = '';
-        //         for ($i = 0; $i < 8; $i++) {
-        //             $uid .= $characters[rand(0, strlen($characters) - 1)];
-        //         }
-
-        //         // Check if UID already exists
-        //         $check_sql = "SELECT COUNT(*) as cnt FROM users WHERE card_uid='$uid'";
-        //         $result = mysqli_query($conn, $check_sql);
-        //         $row = mysqli_fetch_assoc($result);
-        //     } while ($row['cnt'] > 0); // repeat if UID exists
-
-        //     return $uid;
-        // }
-
-        // // Generate a random UID for testing
-        // $test_uid = generateRandomUID($conn);
-        ?>
-
-
-        <!-- <form method="POST" class="mb-4">
-          <div class="mb-3">
-            <label for="uidInput" class="form-label">Card UID</label>
-            <input type="text" name="uid" class="form-control" id="uidInput" value="<?php echo $test_uid; ?>" required>
-          </div>
-          <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-        </form> -->
-        <!-- Testing -->
-
-        <?php
-
-
-        // if (isset($_POST['generate'])) {
-        //     // Oras ng pasok
-        //     $time_slots = [
-        //         "09:00:00",
-        //         "10:00:00",
-        //         "11:00:00",
-        //         "14:00:00"
-        //     ];
-
-        //     // Kunin lahat ng card_uid mula sa users table
-        //     $users = [];
-        //     $result = $conn->query("SELECT card_uid FROM users");
-        //     while ($row = $result->fetch_assoc()) {
-        //         $users[] = $row['card_uid'];
-        //     }
-
-        //     // Date range: Sept 1, 2025 - Oct 31, 2025
-        //     $start = new DateTime("2025-09-01");
-        //     $end   = new DateTime("2025-10-31");
-
-        //     for ($date = clone $start; $date <= $end; $date->modify('+1 day')) {
-        //         // Skip weekends kung gusto mo (tanggalin block na ito kung ayaw)
-        //         if (in_array($date->format('N'), [6,7])) {
-        //             continue;
-        //         }
-
-        //         foreach ($users as $card_uid) {
-        //             // 70% chance na papasok
-        //             if (rand(1, 100) <= 70) {
-        //                 // Random na slot
-        //                 $time = $time_slots[array_rand($time_slots)];
-
-        //                 // Full datetime (Y-m-d H:i:s) para sa DATETIME field
-        //                 $scan_time = $date->format("Y-m-d") . " " . $time;
-
-        //                 // Insert sa attendance table
-        //                 $stmt = $conn->prepare("INSERT INTO attendance (card_uid, scan_time) VALUES (?, ?)");
-        //                 $stmt->bind_param("ss", $card_uid, $scan_time);
-        //                 $stmt->execute();
-        //             }
-        //         }
-        //     }
-
-        //     echo "<div class='alert alert-success'>Random attendance generated successfully!</div>";
-        // }
-        ?>
-
-        <!-- Button -->
-        <!-- <form method="POST">
-            <button type="submit" name="generate" class="btn btn-primary">
-                Generate Random Attendance
-            </button>
-        </form> -->
-        <!-- Testing -->
-
-
 
         <div class="d-flex justify-content-end">
             <div class="col-12 col-md-6 mb-3 mt-3">
@@ -170,7 +65,7 @@ if (isset($_POST['assign'])) {
                 // Main attendance query
                 $sql = "SELECT card_uid, MAX(scan_time) AS scan_time
                         FROM attendance
-                        WHERE card_uid NOT IN (SELECT card_uid FROM users WHERE card_uid IS NOT NULL)
+                        WHERE device_id = '$device_id' AND card_uid NOT IN (SELECT card_uid FROM users WHERE card_uid IS NOT NULL)
                         GROUP BY card_uid
                         ORDER BY scan_time DESC";
 

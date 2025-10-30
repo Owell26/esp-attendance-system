@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['admin_id'] = $row['admin_id'];         // admin id
                 $_SESSION['admin_name'] = $row['full_name'];     // admin name
                 $_SESSION['admin_username'] = $row['user_name']; // optional username
+                $_SESSION['device_id'] = $row['device_id'];    
 
                 // Redirect to dashboard
                 header("Location:../views/dashboard.php");

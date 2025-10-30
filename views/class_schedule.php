@@ -7,12 +7,12 @@ include '../auth/authentication.php';
 if (isset($_POST['add_schedule'])) {
     $year_section = mysqli_real_escape_string($conn, $_POST['year_section']);
     $subject = mysqli_real_escape_string($conn, $_POST['subject']);
-    $teacher_id = intval($_POST['teacher_id']);
     $class_time = mysqli_real_escape_string($conn, $_POST['class_time']);
     $day_of_week = intval($_POST['day_of_week']); // 1=Monday, 7=Sunday
 
-    $sql = "INSERT INTO class_schedule (year_section, subject, teacher_id, class_time, day_of_week)
-            VALUES ('$year_section', '$subject', $teacher_id, '$class_time', $day_of_week)";
+    // Insert with device_id (no teacher_id)
+    $sql = "INSERT INTO class_schedule (year_section, subject, device_id, class_time, day_of_week)
+            VALUES ('$year_section', '$subject', '$device_id', '$class_time', $day_of_week)";
     
     if (mysqli_query($conn, $sql)) {
         $success_msg = "Class schedule added successfully!";
@@ -20,10 +20,6 @@ if (isset($_POST['add_schedule'])) {
         $error_msg = "Error: " . mysqli_error($conn);
     }
 }
-
-// Fetch teachers for the dropdown
-$teachers_sql = "SELECT id, first_name, last_name FROM users WHERE user_type='Teacher' ORDER BY last_name, first_name";
-$teachers_run = mysqli_query($conn, $teachers_sql);
 ?>
 
 <div class="container-fluid">
@@ -50,22 +46,6 @@ $teachers_run = mysqli_query($conn, $teachers_sql);
                 <div class="col-md-3">
                     <label for="subject" class="form-label">Subject:</label>
                     <input type="text" name="subject" id="subject" class="form-control" placeholder="e.g., Math101" required>
-                </div>
-
-                <!-- Teacher -->
-                <div class="col-md-3">
-                    <label for="teacher_id" class="form-label">Teacher:</label>
-                    <select name="teacher_id" id="teacher_id" class="form-select" required>
-                        <option value="">-- Select Teacher --</option>
-                        <?php
-                        if ($teachers_run && mysqli_num_rows($teachers_run) > 0) {
-                            while ($teacher = mysqli_fetch_assoc($teachers_run)) {
-                                $teacher_name = htmlspecialchars($teacher['last_name'] . ', ' . $teacher['first_name']);
-                                echo "<option value='{$teacher['id']}'>{$teacher_name}</option>";
-                            }
-                        }
-                        ?>
-                    </select>
                 </div>
 
                 <!-- Class Time -->
@@ -96,42 +76,39 @@ $teachers_run = mysqli_query($conn, $teachers_sql);
         </form>
 
         <hr>
-        <h4>Existing Class Schedules</h4>
+        <h4>Existing Class Schedules (Your Device)</h4>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
                     <tr>
                         <th>Year & Section</th>
                         <th>Subject</th>
-                        <th>Teacher</th>
                         <th>Class Time</th>
                         <th>Day</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $sched_sql = "SELECT cs.*, u.first_name, u.last_name 
-                                  FROM class_schedule cs
-                                  JOIN users u ON cs.teacher_id = u.id
-                                  ORDER BY cs.year_section, cs.day_of_week, cs.class_time";
+                    // Only show schedules created by this device
+                    $sched_sql = "SELECT * 
+                                  FROM class_schedule
+                                  WHERE device_id = '$device_id'
+                                  ORDER BY year_section, day_of_week, class_time";
                     $sched_run = mysqli_query($conn, $sched_sql);
 
                     if ($sched_run && mysqli_num_rows($sched_run) > 0) {
+                        $day_names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
                         while ($row = mysqli_fetch_assoc($sched_run)) {
-                            $teacher_name = htmlspecialchars($row['last_name'] . ', ' . $row['first_name']);
-                            $day_names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
                             $day_name = $day_names[$row['day_of_week'] - 1];
-
                             echo "<tr>
                                     <td>{$row['year_section']}</td>
                                     <td>{$row['subject']}</td>
-                                    <td>$teacher_name</td>
                                     <td>{$row['class_time']}</td>
                                     <td>$day_name</td>
                                   </tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='5' class='text-center text-muted'>No class schedules found.</td></tr>";
+                        echo "<tr><td colspan='4' class='text-center text-muted'>No class schedules found for this device.</td></tr>";
                     }
                     ?>
                 </tbody>

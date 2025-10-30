@@ -6,9 +6,10 @@ header('Content-Type: application/json');
 
 // Query attendance with assigned users
 $sql = "
-    SELECT attendance.card_uid, attendance.scan_time, attendance.session_type, users.first_name, users.middle_name, users.last_name, users.suffix, users.user_type
+    SELECT attendance.*, users.*
     FROM attendance
     INNER JOIN users ON attendance.card_uid = users.card_uid
+    WHERE device_id = '$device_id'
     ORDER BY attendance.scan_time DESC
 ";
 

@@ -3,12 +3,19 @@ include '../includes/header.php';
 include '../includes/navbar.php';
 include '../auth/authentication.php';
 
-$totalUsersQuery = "SELECT COUNT(*) AS total_users FROM users";
+$totalUsersQuery = "SELECT COUNT(*) AS total_users 
+                    FROM users 
+                    INNER JOIN attendance ON users.card_uid = attendance.card_uid 
+                    WHERE attendance.device_id = '$device_id'";
 $totalUsersResult = mysqli_query($conn, $totalUsersQuery);
 $totalUsers = mysqli_fetch_assoc($totalUsersResult)['total_users'];
 
 // Total Attendance (lahat ng records sa attendance table)
-$totalAttendanceQuery = "SELECT COUNT(*) AS total_attendance FROM attendance";
+$totalAttendanceQuery = "
+                    SELECT COUNT(attendance.id) AS total_attendance
+                    FROM attendance
+                    INNER JOIN users ON attendance.card_uid = users.card_uid
+                    WHERE attendance.device_id = '$device_id'";
 $totalAttendanceResult = mysqli_query($conn, $totalAttendanceQuery);
 $totalAttendance = mysqli_fetch_assoc($totalAttendanceResult)['total_attendance'];
 ?>

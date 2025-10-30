@@ -26,10 +26,45 @@ include '../auth/authentication.php';
                     <th onclick="sortTable(2)" style="cursor: pointer;">Scan Time &#x25B2;&#x25BC;</th>
                 </tr>
             </thead>
-            <tbody id="attendanceBody">
-                <!-- Attendance data will be loaded here -->
+            <tbody>
+             <?php
+                // Query only assigned users (with matching card_uid in both tables)
+                $sql = "
+                    SELECT attendance.card_uid, MAX(attendance.scan_time) AS scan_time,
+                           users.first_name, users.middle_name, users.last_name, users.suffix
+                    FROM attendance
+                    INNER JOIN users ON TRIM(attendance.card_uid) = TRIM(users.card_uid)
+                    WHERE TRIM(attendance.device_id) = TRIM('$device_id')
+                    GROUP BY attendance.card_uid, users.first_name, users.middle_name, users.last_name, users.suffix
+                    ORDER BY scan_time DESC
+                ";
+
+                $sql_run = mysqli_query($conn, $sql);
+
+                if ($sql_run && mysqli_num_rows($sql_run) > 0) {
+                    while ($row = mysqli_fetch_assoc($sql_run)) {
+                        $card_uid = htmlspecialchars($row['card_uid']);
+                        $scan_time = htmlspecialchars($row['scan_time']);
+
+                        // Format name properly (Lastname, Firstname Middlename Suffix)
+                        $fullname = htmlspecialchars(
+                            trim($row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['suffix'])
+                        );
+
+                        echo "
+                        <tr>
+                            <td>$card_uid</td>
+                            <td>$fullname</td>
+                            <td>$scan_time</td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='3' class='text-center text-muted'>No assigned attendance records found.</td></tr>";
+                }
+            ?>
             </tbody>
         </table>
+
     </main>
   </div>
 </div>

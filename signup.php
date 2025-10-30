@@ -1,6 +1,7 @@
 <?php 
 include 'includes/header.php';
-include 'database/db_connect.php';
+include 'database/db_connect.php'; // <-- your DB connection, dapat $conn = mysqli_connect(...);
+
 ?>
 
 
@@ -10,15 +11,9 @@ include 'database/db_connect.php';
             <i class="bi bi-person-circle"></i>
         </div>
         <h2>CTech SmartPAD</h2>
-        <p>Admin Login</p>
+        <p>Admin Signup</p>
 
         <?php  
-        if (isset($_SESSION['success'])) {
-            $success = $_SESSION['success'];
-            echo "<p class='text-success'>$success</p>";
-            unset($_SESSION['success']);
-        }
-
         if (isset($_SESSION['error'])) {
             $error = $_SESSION['error'];
             echo "<p class='text-danger'>$error</p>";
@@ -26,7 +21,17 @@ include 'database/db_connect.php';
         }
         ?>
 
-        <form method="POST" action="controller/login.php">
+        <form method="POST" action="controller/signup.php">
+            <div class="mb-3 input-group">
+                <span class="input-group-text bg-primary text-white"><i class="bi bi-cpu-fill"></i></span>
+                <input type="text" class="form-control" name="device_id" placeholder="Device ID" required style="box-shadow: none">
+            </div>
+
+            <div class="mb-3 input-group">
+                <span class="input-group-text bg-primary text-white"><i class="bi bi-people"></i></span>
+                <input type="text" class="form-control" name="full_name" placeholder="Full Name" required style="box-shadow: none">
+            </div>
+
             <div class="mb-3 input-group">
                 <span class="input-group-text bg-primary text-white"><i class="bi bi-person-fill"></i></span>
                 <input type="text" class="form-control" name="username" placeholder="Username" required style="box-shadow: none">
@@ -38,16 +43,12 @@ include 'database/db_connect.php';
                 <span class="input-group-text bg-primary text-white show-password" onclick="togglePassword()" style="cursor:pointer">
                     <i class="bi bi-eye-fill" id="eyeIcon"></i>
                 </span>
-
-            </div>
-            <div class="d-flex justify-content-end mt-2">
-                <a href="#" class="text-end">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+            <button type="submit" class="btn btn-primary w-100 mt-3">Signup</button>
         </form>
 
-        <p class="mt-3">Don't Have an Account? <a href="signup.php">Signup here</a></p>
+        <p class="mt-3">Already Have an Account? <a href="index.php">Login here</a></p>
 
         <div class="mt-2 text-muted fs-6">
             &copy; <?php echo date("Y"); ?> CTech SmartPAD. All rights reserved.
