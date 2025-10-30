@@ -1,4 +1,4 @@
-<!-- FOOTBAR (Mobile Only) -->
+n<!-- FOOTBAR (Mobile Only) -->
 <nav class="navbar navbar-dark bg-leafy-green navbar-expand d-md-none shadow-lg p-0 mt-5">
   <ul class="navbar-nav nav-justified w-100">
     <!-- Dashboard -->
@@ -29,7 +29,7 @@
     <li class="nav-item">
       <a href="#" class="nav-link text-center text-cream" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAdvanced">
         <i class="bi bi-gear-fill fs-5 mb-1"></i>
-        <div class="small">Advanced</div>
+        <div class="small">Settings</div>
       </a>
     </li>
   </ul>
@@ -119,6 +119,11 @@
       <li>
         <a href="history.php" class="d-block text-decoration-none text-cream py-2">
           <i class="bi bi-journal-text me-2"></i> History / Search
+        </a>
+      </li>
+       <li>
+        <a href="../controller/views/logout.php" class="d-block text-decoration-none text-cream py-2">
+          <i class="bi bi-journal-text me-2"></i> Logout
         </a>
       </li>
     </ul>
