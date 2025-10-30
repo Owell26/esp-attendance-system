@@ -122,7 +122,7 @@ n<!-- FOOTBAR (Mobile Only) -->
         </a>
       </li>
        <li>
-        <a href="../controller/views/logout.php" class="d-block text-decoration-none text-cream py-2">
+        <a href="../controller/logout.php" class="d-block text-decoration-none text-cream py-2">
           <i class="bi bi-journal-text me-2"></i> Logout
         </a>
       </li>
